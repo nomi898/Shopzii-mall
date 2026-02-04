@@ -44,7 +44,7 @@ const menuItems = [
   { label: "Deposit", icon: Wallet, href: "/deposit" as const },
   { label: "Withdraw", icon: PiggyBank, href: "/withdraw" as const },
   { label: "Withdrawal Account", icon: Landmark, href: "/withdraw" as const },
-  { label: "About Us", icon: Info, href: null as const },
+  { label: "About Us", icon: Info, href: null },
 ];
 
 export default function ProfilePage() {
