@@ -18,6 +18,12 @@ import { useAuthUser } from "@/hooks/useAuthUser";
 import AboutUsModal from "@/components/modals/AboutUsModal";
 import InviteFriendsModal from "@/components/modals/InviteFriendsModal";
 
+type MenuItem = {
+  label: string;
+  icon: typeof Wallet;
+  href: string | null;
+};
+
 const stats = [
   {
     title: "Today Profit",
@@ -40,7 +46,7 @@ const stats = [
   },
 ];
 
-const menuItems = [
+const menuItems: MenuItem[] = [
   { label: "Deposit", icon: Wallet, href: "/deposit" },
   { label: "Withdraw", icon: PiggyBank, href: "/withdraw" },
   { label: "Withdrawal Account", icon: Landmark, href: "/withdraw" },
