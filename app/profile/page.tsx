@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import {
   ChevronRight,
   Gift,
@@ -12,6 +13,8 @@ import {
   Wallet,
 } from "lucide-react";
 import { clearAuthUser } from "@/lib/auth";
+import AboutUsModal from "@/components/modals/AboutUsModal";
+import InviteFriendsModal from "@/components/modals/InviteFriendsModal";
 
 const user = {
   name: "Guest",
@@ -43,14 +46,18 @@ const stats = [
 ];
 
 const menuItems = [
-  { label: "Deposit", icon: Wallet, href: "/orders" },
-  { label: "Withdraw", icon: PiggyBank, href: "/orders" },
-  { label: "Withdrawal Account", icon: Landmark, href: "/orders" },
-  { label: "About Us", icon: Info, href: "/services" },
+  { label: "Deposit", icon: Wallet, href: "/deposit" as const },
+  { label: "Withdraw", icon: PiggyBank, href: "/withdraw" as const },
+  { label: "Withdrawal Account", icon: Landmark, href: "/withdraw" as const },
+  { label: "About Us", icon: Info, href: null as const },
 ];
 
 export default function ProfilePage() {
   const router = useRouter();
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [inviteOpen, setInviteOpen] = useState(false);
+
+  const inviteCode = "267242"; // TODO: replace with backend-provided code
 
   function onLogout() {
     clearAuthUser();
@@ -130,7 +137,11 @@ export default function ProfilePage() {
               <p className="text-sm text-white/90 mt-1">
                 Invite friends to get rewards
               </p>
-              <button className="mt-4 inline-flex items-center justify-center rounded-md bg-white/90 px-5 py-2 text-sm font-semibold text-purple-700 shadow-sm">
+              <button
+                type="button"
+                onClick={() => setInviteOpen(true)}
+                className="mt-4 inline-flex items-center justify-center rounded-md bg-white/90 px-5 py-2 text-sm font-semibold text-purple-700 shadow-sm"
+              >
                 Invite Now
               </button>
             </div>
@@ -143,14 +154,10 @@ export default function ProfilePage() {
           <section className="rounded-xl bg-white shadow-md overflow-hidden">
             {menuItems.map((item, idx) => {
               const Icon = item.icon;
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className={`flex items-center justify-between px-5 py-4 ${
-                    idx !== 0 ? "border-t" : ""
-                  }`}
-                >
+              const isAbout = item.label === "About Us";
+
+              const content = (
+                <>
                   <div className="flex items-center gap-3">
                     <div className="h-9 w-9 rounded-lg bg-gray-100 flex items-center justify-center">
                       <Icon className="text-blue-600" size={18} />
@@ -160,7 +167,32 @@ export default function ProfilePage() {
                     </span>
                   </div>
                   <ChevronRight className="text-gray-400" size={18} />
-                </Link>
+                </>
+              );
+
+              return (
+                <div key={item.label}>
+                  {isAbout ? (
+                    <button
+                      type="button"
+                      onClick={() => setAboutOpen(true)}
+                      className={`w-full flex items-center justify-between px-5 py-4 text-left ${
+                        idx !== 0 ? "border-t" : ""
+                      }`}
+                    >
+                      {content}
+                    </button>
+                  ) : (
+                    <Link
+                      href={item.href || "#"}
+                      className={`flex items-center justify-between px-5 py-4 ${
+                        idx !== 0 ? "border-t" : ""
+                      }`}
+                    >
+                      {content}
+                    </Link>
+                  )}
+                </div>
               );
             })}
           </section>
@@ -175,6 +207,13 @@ export default function ProfilePage() {
           </button>
         </div>
       </div>
+
+      <AboutUsModal open={aboutOpen} onClose={() => setAboutOpen(false)} />
+      <InviteFriendsModal
+        open={inviteOpen}
+        onClose={() => setInviteOpen(false)}
+        inviteCode={inviteCode}
+      />
     </main>
   );
 }
