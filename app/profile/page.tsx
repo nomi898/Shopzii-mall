@@ -41,9 +41,9 @@ const stats = [
 ];
 
 const menuItems = [
-  { label: "Deposit", icon: Wallet, href: "/deposit" as const },
-  { label: "Withdraw", icon: PiggyBank, href: "/withdraw" as const },
-  { label: "Withdrawal Account", icon: Landmark, href: "/withdraw" as const },
+  { label: "Deposit", icon: Wallet, href: "/deposit" },
+  { label: "Withdraw", icon: PiggyBank, href: "/withdraw" },
+  { label: "Withdrawal Account", icon: Landmark, href: "/withdraw" },
   { label: "About Us", icon: Info, href: null },
 ];
 
