@@ -1,5 +1,5 @@
 export type AuthUser =
-  | { status: "guest" }
+  | { status: "guest"; firstName?: string; lastName?: string }
   | { status: "user"; email: string };
 
 const STORAGE_KEY = "shopzii_auth_v1";
@@ -15,7 +15,13 @@ export function getAuthUser(): AuthUser | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw) as AuthUser;
     if (!parsed || typeof parsed !== "object") return null;
-    if (parsed.status === "guest") return parsed;
+    if (parsed.status === "guest") {
+      return {
+        status: "guest",
+        firstName: (parsed as any).firstName,
+        lastName: (parsed as any).lastName,
+      };
+    }
     if (parsed.status === "user" && typeof (parsed as any).email === "string")
       return parsed as AuthUser;
     return null;

@@ -1,5 +1,6 @@
 import "./globals.css";
 import BottomNavGate from "@/components/BottomNavGate";
+import SessionProviderWrapper from "@/components/SessionProviderWrapper";
 
 export default function RootLayout({
   children,
@@ -9,8 +10,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
-        <BottomNavGate />
+        <SessionProviderWrapper>
+          {children}
+          <BottomNavGate />
+        </SessionProviderWrapper>
       </body>
     </html>
   );

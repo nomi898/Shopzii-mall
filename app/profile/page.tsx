@@ -12,16 +12,11 @@ import {
   PiggyBank,
   Wallet,
 } from "lucide-react";
+import { signOut } from "next-auth/react";
 import { clearAuthUser } from "@/lib/auth";
+import { useAuthUser } from "@/hooks/useAuthUser";
 import AboutUsModal from "@/components/modals/AboutUsModal";
 import InviteFriendsModal from "@/components/modals/InviteFriendsModal";
-
-const user = {
-  name: "Guest",
-  code: "",
-  creditReputation: "100%",
-  badgeBalance: 0,
-};
 
 const stats = [
   {
@@ -54,13 +49,33 @@ const menuItems = [
 
 export default function ProfilePage() {
   const router = useRouter();
+  const { user: authUser } = useAuthUser();
   const [aboutOpen, setAboutOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
 
   const inviteCode = "267242"; // TODO: replace with backend-provided code
 
-  function onLogout() {
+  const userName =
+    authUser?.status === "guest"
+      ? authUser.firstName && authUser.lastName
+        ? `${authUser.firstName} ${authUser.lastName}`
+        : "Guest"
+      : authUser?.status === "user"
+        ? authUser.email.split("@")[0]
+        : "Guest";
+
+  const user = {
+    name: userName,
+    code: "",
+    creditReputation: "100%",
+    badgeBalance: 0,
+  };
+
+  async function onLogout() {
+    // Clear guest auth if exists
     clearAuthUser();
+    // Sign out from NextAuth session
+    await signOut({ redirect: false });
     router.push("/");
     router.refresh();
   }
